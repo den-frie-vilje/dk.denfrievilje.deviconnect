@@ -1,5 +1,8 @@
 {
   "1.0.0": {
     "en": "Support for DEVIreg™ Display Connect floor heating thermostat"
+  },
+  "1.0.1": {
+    "en": "Operational State capability added to reflect if the heater is turned on"
   }
 }
