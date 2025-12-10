@@ -1,0 +1,42 @@
+{
+  "name": {
+    "en": "DEVIreg™ Display Connect"
+  },
+  "class": "heater",
+  "capabilities": ["target_temperature", "measure_temperature"],
+  "platforms": ["local"],
+  "connectivity": ["zigbee"],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": { "next": "add_devices" }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "zigbee": {
+    "manufacturerName": "devi",
+    "productId": ["devi_c"],
+    "endpoints": {
+      "1": {
+        "clusters": [0,3,10,513,1026,2821],
+        "bindings": [10]
+      }
+    },
+    "learnmode": {
+      "image": "{{driverAssetsPath}}/learnmode.svg",
+      "instruction": { 
+        "en": "Press the reset button on your thermostat for 5 seconds until the connection icon flashes red",
+        "da": "Hold reset knappen på termostaten nede i 5 sekunder indtil forbindelsesikonet blinker rødt"
+      }
+    }
+  }
+}

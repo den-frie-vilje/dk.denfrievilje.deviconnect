@@ -1,0 +1,23 @@
+{
+  "name": "dk.denfrievilje.deviconnect",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore ."
+  },
+  "engines": {
+    "node": "22"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22",
+    "@types/homey": "npm:homey-apps-sdk-v3-types@^0.3.12",
+    "@types/node": "^24.10.2",
+    "eslint": "^7.32.0",
+    "eslint-config-athom": "^3.1.5",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "homey-zigbeedriver": "^2.2.3"
+  }
+}
