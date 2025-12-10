@@ -1,7 +1,7 @@
 {
   "id": "dk.denfrievilje.deviconnect",
   "version": "1.0.0",
-  "compatibility": ">=5.0.0",
+  "compatibility": ">=12.2.0",
   "sdk": 3,
   "brandColor": "#2A6495",
   "platforms": [

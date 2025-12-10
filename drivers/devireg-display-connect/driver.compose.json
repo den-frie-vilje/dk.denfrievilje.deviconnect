@@ -17,7 +17,8 @@
   "class": "heater",
   "capabilities": [
     "target_temperature",
-    "measure_temperature"
+    "measure_temperature",
+    "operational_state"
   ],
   "platforms": [
     "local"
