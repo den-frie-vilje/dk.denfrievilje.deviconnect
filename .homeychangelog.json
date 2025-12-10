@@ -4,5 +4,8 @@
   },
   "1.0.1": {
     "en": "Operational State capability added to reflect if the heater is turned on"
+  },
+  "1.0.2": {
+    "en": "fixed error updating values from thermostat in homey"
   }
 }
