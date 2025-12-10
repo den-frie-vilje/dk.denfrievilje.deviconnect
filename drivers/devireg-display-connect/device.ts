@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
 const { ZigBeeDevice } = require('homey-zigbeedriver');
-const { debug, CLUSTER } = require('zigbee-clusters');
+const { debug, CLUSTER, Cluster } = require('zigbee-clusters');
+const DeviConnectThermostatCluster = require('../../lib/deviConnectThermostatCluster');
 
 // Enable debug logging of all relevant Zigbee communication
-// debug(true);
+debug(true);
+
+Cluster.addCluster(DeviConnectThermostatCluster);
 
 class DeviDisplayConnectDevice extends ZigBeeDevice {
   async onNodeInit({ zclNode }: any) {
@@ -28,30 +31,12 @@ class DeviDisplayConnectDevice extends ZigBeeDevice {
       // setParser: (value: any) => value * 100,
     });
 
-    this.zclNode.endpoints[1].clusters[
-      CLUSTER.THERMOSTAT.NAME
-    ].onReportAttributes = (
-      args: any,
-      meta: any,
-      frame: any,
-      rawFrame: any,
-    ) => {
-      if (frame?.cmdId === 10) {
-        if (Buffer.from([0x0a, 0x40, 0x20, 0x01]).compare(frame.data) === 0) {
-          this.setCapabilityValue('operational_state', 'running').catch(
-            this.error,
-          );
-          // this.log("TÆNDT");
-        } else if (
-          Buffer.from([0x0a, 0x40, 0x20, 0x00]).compare(frame.data) === 0
-        ) {
-          this.setCapabilityValue('operational_state', 'paused').catch(
-            this.error,
-          );
-          // this.log("SLUKKET");
-        }
-      }
-    };
+    this.registerCapability('operational_state', CLUSTER.THERMOSTAT, {
+      report: 'heaterOn',
+      reportParser: (value: any) => (value ? "running" : "stopped"),
+      get: 'heaterOn',
+      getParser: (value: any) => (value ? "running" : "stopped")
+    });
 
     // When changing target temperature in Homey
     this.registerCapabilityListener(
