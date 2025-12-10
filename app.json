@@ -9,11 +9,34 @@
     "local"
   ],
   "name": {
-    "en": "DEVIreg™ ZigBee"
+    "en": "DEVIreg™ ZigBee",
+    "nl": "DEVIreg™ ZigBee",
+    "da": "DEVIreg™ ZigBee",
+    "de": "DEVIreg™ ZigBee",
+    "es": "DEVIreg™ ZigBee",
+    "fr": "DEVIreg™ ZigBee",
+    "it": "DEVIreg™ ZigBee",
+    "no": "DEVIreg™ ZigBee",
+    "sv": "DEVIreg™ ZigBee",
+    "pl": "DEVIreg™ ZigBee",
+    "ru": "DEVIreg™ ZigBee",
+    "ko": "DEVIreg™ ZigBee",
+    "ar": "DEVIreg™ ZigBee"
   },
   "description": {
     "en": "Support for DEVIreg™ ZigBee based thermostats",
-    "da": "Understøtter DEVIreg™ ZigBee baserede termostater"
+    "da": "Understøtter DEVIreg™ ZigBee baserede termostater",
+    "nl": "Ondersteuning voor DEVIreg™ ZigBee-gebaseerde thermostaten",
+    "de": "Unterstützung für DEVIreg™ ZigBee-basierte Thermostate",
+    "es": "Soporte para termostatos basados en DEVIreg™ ZigBee",
+    "fr": "Support pour thermostats à base de DEVIreg™ ZigBee",
+    "it": "Supporto per termostati basati su DEVIreg™ ZigBee",
+    "no": "Støtte for DEVIreg™ ZigBee-baserte termostater",
+    "sv": "Stöd för DEVIreg™ ZigBee-baserade termostater",
+    "pl": "Wsparcie dla termostatów opartych na DEVIreg™ ZigBee",
+    "ru": "Поддержка термостатов на базе DEVIreg™ ZigBee",
+    "ko": "DEVIreg™ ZigBee 기반 온도 조절기에 대한 지원",
+    "ar": "دعم للترازيموستات القائمة على DEVIreg™ ZigBee"
   },
   "category": [
     "climate"
@@ -38,10 +61,28 @@
       }
     }
   },
+  "homepage": "https://devi.com/",
+  "homeyCommunityTopicId": 146682,
+  "source": "https://github.com/den-frie-vilje/dk.denfrievilje.deviconnect",
+  "bugs": {
+    "url": "https://github.com/den-frie-vilje/dk.denfrievilje.deviconnect/issues"
+  },
   "drivers": [
     {
       "name": {
-        "en": "DEVIreg™ Display Connect"
+        "en": "DEVIreg™ Display Connect",
+        "nl": "DEVIreg™ Display Connect",
+        "da": "DEVIreg™ Display Connect",
+        "de": "DEVIreg™ Display Connect",
+        "es": "DEVIreg™ Display Connect",
+        "fr": "DEVIreg™ Display Connect",
+        "it": "DEVIreg™ Display Connect",
+        "no": "DEVIreg™ Display Connect",
+        "sv": "DEVIreg™ Display Connect",
+        "pl": "DEVIreg™ Display Connect",
+        "ru": "DEVIreg™ Display Connect",
+        "ko": "DEVIreg™ Display Connect",
+        "ar": "DEVIreg™ Display Connect"
       },
       "class": "heater",
       "capabilities": [
@@ -96,7 +137,18 @@
           "image": "/drivers/devireg-display-connect/assets/learnmode.svg",
           "instruction": {
             "en": "Press the reset button on your thermostat for 5 seconds until the connection icon flashes red",
-            "da": "Hold reset knappen på termostaten nede i 5 sekunder indtil forbindelsesikonet blinker rødt"
+            "da": "Hold reset knappen på termostaten nede i 5 sekunder indtil forbindelsesikonet blinker rødt",
+            "nl": "Druk 5 seconden op de resetknop van je thermostaat totdat het verbindingsicoon rood knippert",
+            "de": "Drücken Sie die Reset-Taste an Ihrem Thermostat 5 Sekunden lang, bis das Verbindungssymbol rot blinkt",
+            "es": "Presiona el botón de reinicio de tu termostato durante 5 segundos hasta que el icono de conexión parpadee en rojo",
+            "fr": "Appuyez sur le bouton de réinitialisation de votre thermostat pendant 5 secondes jusqu'à ce que l'icône de connexion clignote en rouge",
+            "it": "Premi il pulsante di reset sul tuo termostato per 5 secondi fino a quando l'icona di connessione lampeggia in rosso",
+            "no": "Trykk på reset-knappen på termostaten din i 5 sekunder til tilkoblingsikonet blinker rødt",
+            "sv": "Tryck på reset-knappen på din termostat i 5 sekunder tills anslutningsikonen blinkar rött",
+            "pl": "Naciśnij przycisk reset na swoim termostacie przez 5 sekund, aż ikona połączenia zacznie migać na czerwono",
+            "ru": "Нажмите кнопку сброса на вашем термостате и удерживайте её 5 секунд, пока индикатор связи не начнет мигать красным",
+            "ko": "온도 조절기의 리셋 버튼을 5초간 누르면 연결 아이콘이 빨간색으로 깜빡입니다",
+            "ar": "اضغط على زر إعادة الضبط في منظم الحرارة الخاص بك لمدة 5 ثوانٍ حتى يومض رمز الاتصال باللون الأحمر"
           }
         }
       },

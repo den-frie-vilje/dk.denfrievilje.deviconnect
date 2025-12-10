@@ -1,4 +1,4 @@
-import Homey from 'homey';
+const Homey = require('homey');
 
 class DeviConnectApp extends Homey.App {
 

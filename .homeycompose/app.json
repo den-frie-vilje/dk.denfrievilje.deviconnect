@@ -4,15 +4,42 @@
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#2A6495",
-  "platforms": ["local"],
+  "platforms": [
+    "local"
+  ],
   "name": {
-    "en": "DEVIreg™ ZigBee"
+    "en": "DEVIreg™ ZigBee",
+    "nl": "DEVIreg™ ZigBee",
+    "da": "DEVIreg™ ZigBee",
+    "de": "DEVIreg™ ZigBee",
+    "es": "DEVIreg™ ZigBee",
+    "fr": "DEVIreg™ ZigBee",
+    "it": "DEVIreg™ ZigBee",
+    "no": "DEVIreg™ ZigBee",
+    "sv": "DEVIreg™ ZigBee",
+    "pl": "DEVIreg™ ZigBee",
+    "ru": "DEVIreg™ ZigBee",
+    "ko": "DEVIreg™ ZigBee",
+    "ar": "DEVIreg™ ZigBee"
   },
   "description": {
     "en": "Support for DEVIreg™ ZigBee based thermostats",
-    "da": "Understøtter DEVIreg™ ZigBee baserede termostater"
+    "da": "Understøtter DEVIreg™ ZigBee baserede termostater",
+    "nl": "Ondersteuning voor DEVIreg™ ZigBee-gebaseerde thermostaten",
+    "de": "Unterstützung für DEVIreg™ ZigBee-basierte Thermostate",
+    "es": "Soporte para termostatos basados en DEVIreg™ ZigBee",
+    "fr": "Support pour thermostats à base de DEVIreg™ ZigBee",
+    "it": "Supporto per termostati basati su DEVIreg™ ZigBee",
+    "no": "Støtte for DEVIreg™ ZigBee-baserte termostater",
+    "sv": "Stöd för DEVIreg™ ZigBee-baserade termostater",
+    "pl": "Wsparcie dla termostatów opartych na DEVIreg™ ZigBee",
+    "ru": "Поддержка термостатов на базе DEVIreg™ ZigBee",
+    "ko": "DEVIreg™ ZigBee 기반 온도 조절기에 대한 지원",
+    "ar": "دعم للترازيموستات القائمة على DEVIreg™ ZigBee"
   },
-  "category": ["climate"],
+  "category": [
+    "climate"
+  ],
   "permissions": [],
   "images": {
     "small": "/assets/images/small.jpg",
@@ -32,5 +59,11 @@
         "username": "den-frie-vilje"
       }
     }
+  },
+  "homepage": "https://devi.com/",
+  "homeyCommunityTopicId": 146682,
+  "source": "https://github.com/den-frie-vilje/dk.denfrievilje.deviconnect",
+  "bugs": {
+    "url": "https://github.com/den-frie-vilje/dk.denfrievilje.deviconnect/issues"
   }
 }

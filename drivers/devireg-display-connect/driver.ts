@@ -1,11 +1,11 @@
-import Homey from "homey";
+const Homey = require('homey');
 
 class DeviDisplayConnectDriver extends Homey.Driver {
   /**
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.log("DeviDisplayConnectDriver has been initialized");
+    this.log('DeviDisplayConnectDriver has been initialized');
   }
 
 }
