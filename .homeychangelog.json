@@ -7,5 +7,8 @@
   },
   "1.0.2": {
     "en": "fixed error updating values from thermostat in homey"
+  },
+  "1.0.3": {
+    "en": "fixed icons and disabled debug logging"
   }
 }
