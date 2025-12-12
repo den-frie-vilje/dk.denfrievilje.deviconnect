@@ -4,12 +4,13 @@ const { debug, CLUSTER, Cluster } = require('zigbee-clusters');
 const DeviConnectThermostatCluster = require('../../lib/deviConnectThermostatCluster');
 
 // Enable debug logging of all relevant Zigbee communication
-debug(true);
+// debug(true);
 
 Cluster.addCluster(DeviConnectThermostatCluster);
 
 class DeviDisplayConnectDevice extends ZigBeeDevice {
   async onNodeInit({ zclNode }: any) {
+    
     if (!this.hasCapability('operational_state')) {
       // Add  capability if not already added
       await this.addCapability('operational_state');
