@@ -1,14 +1,62 @@
 {
   "1.0.0": {
-    "en": "Support for DEVIreg™ Display Connect floor heating thermostat"
+    "en": "Support for DEVIreg™ Display Connect floor heating thermostat",
+    "nl": "Ondersteuning voor DEVIreg™ Display Connect vloerverwarmingsthermostaat",
+    "da": "Support til DEVIreg™ Display Connect gulvvarmetermostat",
+    "de": "Unterstützung für den DEVIreg™ Display Connect Fußbodenheizungsthermostat",
+    "es": "Soporte para el termostato de calefacción de suelo DEVIreg™ Display Connect",
+    "fr": "Support pour thermostat de chauffage au sol DEVIreg™ Display Connect",
+    "it": "Supporto per il termostato del riscaldamento a pavimento DEVIreg™ Display Connect",
+    "no": "Støtte for DEVIreg™ Display Connect gulvvarmetermostat",
+    "sv": "Stöd för DEVIreg™ Display Connect golvvärmetermostat",
+    "pl": "Wsparcie dla termostatu ogrzewania podłogowego DEVIreg™ Display Connect",
+    "ru": "Поддержка термостата теплого пола DEVIreg™ Display Connect",
+    "ko": "DEVIreg™ Display Connect 바닥 난방 온도 조절기 지원",
+    "ar": "دعم لجهاز تنظيم حرارة تدفئة الأرضية DEVIreg™ Display Connect"
   },
   "1.0.1": {
-    "en": "Operational State capability added to reflect if the heater is turned on"
+    "en": "Operational State capability added to reflect if the heater is turned on",
+    "nl": "Toegevoegde Operational State-functie om aan te geven of de verwarming is ingeschakeld",
+    "da": "Operational State-funktion tilføjet for at vise, om varmelegemet er tændt",
+    "de": "Betriebszustandsfunktion hinzugefügt, um anzuzeigen, ob der Heizer eingeschaltet ist",
+    "es": "Capacidad de Estado Operativo añadida para reflejar si el calentador está encendido",
+    "fr": "Capacité d'État Opérationnel ajoutée pour indiquer si le radiateur est allumé",
+    "it": "Aggiunta capacità dello Stato Operativo per indicare se il riscaldatore è acceso",
+    "no": "Operativ staat-funksjon lagt til for å vise om varmeovnen er på",
+    "sv": "Operativt tillstånd-funktion tillagd för att indikera om värmaren är påslagen",
+    "pl": "Dodano funkcję Stanu Operacyjnego, aby pokazać, czy ogrzewanie jest włączone",
+    "ru": "Добавлена функция состояния работы, чтобы отразить, включен ли обогреватель",
+    "ko": "히터가 켜져 있는지를 나타내기 위한 작동 상태 기능 추가",
+    "ar": "تمت إضافة قدرة حالة التشغيل لتعكس ما إذا كان السخان قيد التشغيل"
   },
   "1.0.2": {
-    "en": "fixed error updating values from thermostat in homey"
+    "en": "Fixed error updating values from thermostat in homey",
+    "nl": "Fout bij het bijwerken van waarden van thermostaat in homey opgelost",
+    "da": "Rettet fejl ved opdatering af værdier fra termostat i homey",
+    "de": "Fehler beim Aktualisieren von Werten vom Thermostat in homey behoben",
+    "es": "Error al actualizar valores del termostato en homey solucionado",
+    "fr": "Erreur de mise à jour des valeurs du thermostat dans homey corrigée",
+    "it": "Errore di aggiornamento dei valori dal termostato in homey risolto",
+    "no": "Fikset feil ved oppdatering av verdier fra termostat i homey",
+    "sv": "Fixade fel vid uppdatering av värden från termostaten i homey",
+    "pl": "Naprawiono błąd aktualizacji wartości z termostatu w homey",
+    "ru": "Исправлена ошибка обновления значений от термостата в homey",
+    "ko": "homey에서 온도 조절기 값 업데이트 오류 수정",
+    "ar": "تم إصلاح خطأ في تحديث القيم من منظم الحرارة في homey"
   },
   "1.0.3": {
-    "en": "fixed icons and disabled debug logging"
+    "en": "Fixed icons and disabled debug logging",
+    "nl": "Pictogrammen gerepareerd en debug logging uitgeschakeld",
+    "da": "Rettede ikoner og deaktiverede fejlsøgningslogning",
+    "de": "Symbole korrigiert und Debug-Logging deaktiviert",
+    "es": "Íconos corregidos y desactivado el registro de depuración",
+    "fr": "Icônes corrigées et journalisation de débogage désactivée",
+    "it": "Icone corrette e debug logging disabilitato",
+    "no": "Rettet ikoner og deaktivert feilsøkingslogging",
+    "sv": "Fixade ikoner och inaktiverade felsökningsloggning",
+    "pl": "Naprawiono ikony i wyłączono rejestrowanie debugowania",
+    "ru": "Исправлены значки и отключено ведение отладочного журнала",
+    "ko": "아이콘 수정 및 디버그 로깅 비활성화",
+    "ar": "تم إصلاح الأيقونات وتعطيل تسجيل الأخطاء"
   }
 }
