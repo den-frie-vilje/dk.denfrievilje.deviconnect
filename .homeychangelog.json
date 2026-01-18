@@ -60,9 +60,31 @@
     "ar": "تم إصلاح الأيقونات وتعطيل تسجيل الأخطاء"
   },
   "1.0.4": {
-    "en": "Learnmode animation for pairing"
+    "en": "Learnmode animation for pairing",
+    "da": "Learnmode animation til sammenkobling",
+    "de": "Learnmode-Animation für die Kopplung",
+    "es": "Animación de modo de aprendizaje para emparejamiento",
+    "fr": "Animation mode d'apprentissage pour l'appairage",
+    "it": "Animazione modalità apprendimento per l'associazione",
+    "no": "Læringsmodus-animasjon for paring",
+    "sv": "Läromodusanimering för parkoppling",
+    "pl": "Animacja w trybie nauki do parowania",
+    "ru": "Анимация режима обучения для сопряжения",
+    "ko": "페어링을 위한 학습 모드 애니메이션",
+    "ar": "الرسوم المتحركة لوضع التعلم للتزاوج"
   },
   "1.1.0": {
-    "en": "Added support for DEVIreg InControl"
+    "en": "Added support for DEVIreg InControl",
+    "da": "Tilføjet support til DEVIreg InControl",
+    "de": "Unterstützung für DEVIreg InControl hinzugefügt",
+    "es": "Añadido soporte para DEVIreg InControl",
+    "fr": "Support ajouté pour DEVIreg InControl",
+    "it": "Aggiunto supporto per DEVIreg InControl",
+    "no": "Lagt til støtte for DEVIreg InControl",
+    "sv": "Lagt till stöd för DEVIreg InControl",
+    "pl": "Dodano wsparcie dla DEVIreg InControl",
+    "ru": "Добавлена поддержка DEVIreg InControl",
+    "ko": "DEVIreg InControl 지원 추가",
+    "ar": "تمت إضافة دعم لـ DEVIreg InControl"
   }
 }
