@@ -4,6 +4,4 @@ Maak Flows om moeiteloos je verwarmingsregeling precies op de manier te activere
 
 Ondersteuning voor DEVIreg™-modellen:  
 - DEVIreg™ Display Connect  
-
-In afwachting van ondersteuning voor:  
 - DEVIreg™ InControl

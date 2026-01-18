@@ -2,6 +2,4 @@ Salta il gateway DEVIreg™ Connect e collega direttamente le tue unità DEVIreg
 
 Supporto per i modelli DEVIreg™:
 - DEVIreg™ Display Connect
-
-Supporto in attesa per:
 - DEVIreg™ InControl

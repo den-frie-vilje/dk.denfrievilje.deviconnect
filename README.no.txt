@@ -2,6 +2,4 @@ Hopp over DEVIreg™ Connect-gatewayen og koble dine DEVIreg ZigBee-enheter dire
 
 Støtte for DEVIreg™-modeller:
 - DEVIreg™ Display Connect
-
-Ventende støtte for:
 - DEVIreg™ InControl

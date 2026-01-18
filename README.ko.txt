@@ -2,6 +2,4 @@ DEVIreg™ Connect 게이트웨이를 건너뛰고 DEVIreg ZigBee 유닛을 Home
 
 지원하는 DEVIreg™ 모델:
 - DEVIreg™ Display Connect
-
-지원 예정:
 - DEVIreg™ InControl

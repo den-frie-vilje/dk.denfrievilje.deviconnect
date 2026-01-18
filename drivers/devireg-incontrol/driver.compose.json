@@ -1,0 +1,86 @@
+{
+  "name": {
+    "en": "DEVIreg™ InControl",
+    "nl": "DEVIreg™ InControl",
+    "da": "DEVIreg™ InControl",
+    "de": "DEVIreg™ InControl",
+    "es": "DEVIreg™ InControl",
+    "fr": "DEVIreg™ InControl",
+    "it": "DEVIreg™ InControl",
+    "no": "DEVIreg™ InControl",
+    "sv": "DEVIreg™ InControl",
+    "pl": "DEVIreg™ InControl",
+    "ru": "DEVIreg™ InControl",
+    "ko": "DEVIreg™ InControl",
+    "ar": "DEVIreg™ InControl"
+  },
+  "class": "heater",
+  "capabilities": [
+    "target_temperature",
+    "measure_temperature",
+    "operational_state"
+  ],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "zigbee"
+  ],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "zigbee": {
+    "manufacturerName": "devi",
+    "productId": [
+      "devi_f"
+    ],
+    "endpoints": {
+      "1": {
+        "clusters": [
+          0,
+          3,
+          10,
+          513,
+          1026,
+          2821
+        ],
+        "bindings": [
+          10
+        ]
+      }
+    },
+    "learnmode": {
+      "image": "{{driverAssetsPath}}/learnmode.svg",
+      "instruction": {
+        "en": "Press the reset button on your thermostat for 5 seconds until the connection icon flashes red",
+        "da": "Hold reset knappen på termostaten nede i 5 sekunder indtil forbindelsesikonet blinker rødt",
+        "nl": "Druk 5 seconden op de resetknop van je thermostaat totdat het verbindingsicoon rood knippert",
+        "de": "Drücken Sie die Reset-Taste an Ihrem Thermostat 5 Sekunden lang, bis das Verbindungssymbol rot blinkt",
+        "es": "Presiona el botón de reinicio de tu termostato durante 5 segundos hasta que el icono de conexión parpadee en rojo",
+        "fr": "Appuyez sur le bouton de réinitialisation de votre thermostat pendant 5 secondes jusqu'à ce que l'icône de connexion clignote en rouge",
+        "it": "Premi il pulsante di reset sul tuo termostato per 5 secondi fino a quando l'icona di connessione lampeggia in rosso",
+        "no": "Trykk på reset-knappen på termostaten din i 5 sekunder til tilkoblingsikonet blinker rødt",
+        "sv": "Tryck på reset-knappen på din termostat i 5 sekunder tills anslutningsikonen blinkar rött",
+        "pl": "Naciśnij przycisk reset na swoim termostacie przez 5 sekund, aż ikona połączenia zacznie migać na czerwono",
+        "ru": "Нажмите кнопку сброса на вашем термостате и удерживайте её 5 секунд, пока индикатор связи не начнет мигать красным",
+        "ko": "온도 조절기의 리셋 버튼을 5초간 누르면 연결 아이콘이 빨간색으로 깜빡입니다",
+        "ar": "اضغط على زر إعادة الضبط في منظم الحرارة الخاص بك لمدة 5 ثوانٍ حتى يومض رمز الاتصال باللون الأحمر"
+      }
+    }
+  }
+}

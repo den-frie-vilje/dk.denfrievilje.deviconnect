@@ -4,6 +4,4 @@ Create Flows to effortlessly trigger your heating control in exactly the way you
 
 Support for DEVIreg™ models :
 - DEVIreg™ Display Connect
-
-Pending support for :
 - DEVIreg™ InControl

@@ -2,6 +2,4 @@
 
 دعم لنماذج DEVIreg™:
 - DEVIreg™ Display Connect
-
-دعم معلق لـ:
 - DEVIreg™ InControl

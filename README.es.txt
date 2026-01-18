@@ -4,6 +4,4 @@ Crea Flujos para activar el control de tu calefacción de manera sencilla y exac
 
 Soporte para modelos DEVIreg™:
 - DEVIreg™ Display Connect
-
-Soporte pendiente para:
 - DEVIreg™ InControl

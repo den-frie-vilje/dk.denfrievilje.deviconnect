@@ -4,6 +4,4 @@ Twórz Flows, aby bez wysiłku uruchamiać kontrolę ogrzewania dokładnie w tak
 
 Obsługiwane modele DEVIreg™:
 - DEVIreg™ Display Connect
-
-Obsługa w przygotowaniu dla:
 - DEVIreg™ InControl

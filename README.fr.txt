@@ -2,6 +2,4 @@
 
 Support pour les modèles DEVIreg™ :
 - DEVIreg™ Display Connect
-
-Support en attente pour :
 - DEVIreg™ InControl

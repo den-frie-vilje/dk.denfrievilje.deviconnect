@@ -4,6 +4,4 @@
 
 Поддерживаемые модели DEVIreg™:
 - DEVIreg™ Display Connect
-
-Ожидается поддержка для:
 - DEVIreg™ InControl

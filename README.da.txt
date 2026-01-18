@@ -4,6 +4,4 @@ Opret Flows for ubesværet at aktivere din varmekontrol præcis på den måde, d
 
 Understøttede DEVIreg™ modeller:
 - DEVIreg™ Display Connect
-
-På vej til understøttelse af:
 - DEVIreg™ InControl

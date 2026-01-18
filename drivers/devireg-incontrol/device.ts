@@ -8,7 +8,7 @@ const DeviConnectThermostatCluster = require('../../lib/deviConnectThermostatClu
 
 Cluster.addCluster(DeviConnectThermostatCluster);
 
-class DeviDisplayConnectDevice extends ZigBeeDevice {
+class DeviIncontrolDevice extends ZigBeeDevice {
   async onNodeInit({ zclNode }: any) {
 
     if (!this.hasCapability('operational_state')) {
@@ -55,4 +55,4 @@ class DeviDisplayConnectDevice extends ZigBeeDevice {
   }
 }
 
-module.exports = DeviDisplayConnectDevice;
+module.exports = DeviIncontrolDevice;
