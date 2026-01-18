@@ -61,5 +61,8 @@
   },
   "1.0.4": {
     "en": "Learnmode animation for pairing"
+  },
+  "1.1.0": {
+    "en": "Added support for DEVIreg InControl"
   }
 }
