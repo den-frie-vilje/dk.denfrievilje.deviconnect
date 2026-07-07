@@ -97,25 +97,18 @@ class DeviThermostatDevice extends ZigBeeDevice {
       reportParser: (value: any) => value !== 'noLockout',
       get: 'keypadLockout',
       getParser: (value: any) => value !== 'noLockout',
+      set: 'writeAttributes',
+      setParser: (value: any) => ({
+        keypadLockout: value ? 'levelOneLockout' : 'noLockout',
+      }),
       getOpts,
     });
 
-    // When changing target temperature in Homey. The manifest `set` option is
-    // not used because occupiedHeatingSetpoint must be written as an
-    // attribute, not sent as a cluster command.
+    // Custom listener (replaces the one registerCapability installs, hence
+    // the harmless "already registered" warning): the sub-15 °C workaround
+    // needs a two-step write with a delay, which set/setParser cannot express.
     this.registerCapabilityListener('target_temperature', async (value: any) => {
       return this.writeSetpoint(value);
-    });
-
-    this.registerCapabilityListener('locked', async (value: any) => {
-      try {
-        await this.userInterfaceCluster().writeAttributes({
-          keypadLockout: value ? 'levelOneLockout' : 'noLockout',
-        });
-      } catch (err) {
-        this.error('Failed to write keypadLockout', err);
-        throw err;
-      }
     });
 
     // Live updates when the setpoint limits are changed on the device itself
@@ -194,11 +187,6 @@ class DeviThermostatDevice extends ZigBeeDevice {
   thermostatCluster() {
     return this.zclNode.endpoints[this.thermostatEndpoint]
       .clusters[CLUSTER.THERMOSTAT.NAME];
-  }
-
-  userInterfaceCluster() {
-    const endpoint = this.getClusterEndpoint(DeviUserInterfaceCluster) ?? this.thermostatEndpoint;
-    return this.zclNode.endpoints[endpoint].clusters[DeviUserInterfaceCluster.NAME];
   }
 
   temperatureMeasurementCluster() {
