@@ -27,13 +27,16 @@ const DEFAULT_SETPOINT_LIMITS = { min: 5, max: 35 };
 
 class DeviThermostatDevice extends ZigBeeDevice {
 
-  // The firmware clamps setpoint writes that cross below 15 °C in one step.
-  // Documented on InControl (devi_f), but both models share the same firmware
-  // (03.48), so the workaround is enabled for all drivers — it is inert for
-  // setpoints of 15 °C and above. If Danfoss ever ships a fix this can be
-  // gated by the firmware_version setting.
-  get lowSetpointWorkaround() {
-    return true;
+  // Firmware before 03.49 clamps setpoint writes that cross below 15 °C in
+  // one step; fixed in 03.49 and later (confirmed by Danfoss). Apply the
+  // workaround on older firmware, and when the version is unknown to be safe.
+  needsLowSetpointWorkaround() {
+    const version = String(this.getSetting('firmware_version') || '');
+    const match = version.match(/^(\d+)\.(\d+)/);
+    if (!match) return true;
+    const major = parseInt(match[1], 10);
+    const minor = parseInt(match[2], 10);
+    return major < 3 || (major === 3 && minor < 49);
   }
 
   // localTemperatureCalibration is only verified on DEVIreg InControl
@@ -146,6 +149,8 @@ class DeviThermostatDevice extends ZigBeeDevice {
     await this.syncDeviceTime();
     await this.ensureAttributeReporting(true);
     await this.syncSetpointLimits();
+    // A firmware update reboots the device, so refresh the version too
+    await this.readFirmwareVersion();
   }
 
   async onSettings({ oldSettings, newSettings, changedKeys }: any) {
@@ -197,7 +202,7 @@ class DeviThermostatDevice extends ZigBeeDevice {
     const { min, max } = this.setpointLimits;
     const setpoint = Math.round(Math.max(min, Math.min(max, value)) * 100);
     try {
-      if (this.lowSetpointWorkaround && setpoint < 1500) {
+      if (this.needsLowSetpointWorkaround() && setpoint < 1500) {
         // Firmware clamps the setpoint at 15 °C when crossing below it in a
         // single write; write 15 °C first, let the display settle, then write
         // the real value (same workaround as zigbee2mqtt uses)
@@ -385,14 +390,17 @@ class DeviThermostatDevice extends ZigBeeDevice {
     return Math.round(Date.now() / 1000) - ZIGBEE_EPOCH_OFFSET_S;
   }
 
+  // Refreshed on every init and on device announce: the firmware can change
+  // over the device's lifetime and needsLowSetpointWorkaround() depends on it
   async readFirmwareVersion() {
-    if (this.getSetting('firmware_version')) return;
     try {
       const endpoint = this.getClusterEndpoint(CLUSTER.BASIC) ?? this.thermostatEndpoint;
       const { swBuildId } = await this.zclNode.endpoints[endpoint]
         .clusters[CLUSTER.BASIC.NAME].readAttributes(['swBuildId']);
-      if (swBuildId) {
-        await this.setSettings({ firmware_version: String(swBuildId).replace(/\0/g, '') });
+      const version = swBuildId ? String(swBuildId).replace(/\0/g, '') : '';
+      if (version && version !== this.getSetting('firmware_version')) {
+        await this.setSettings({ firmware_version: version });
+        this.log(`Firmware version: ${version}`);
       }
     } catch (err) {
       this.log('Could not read firmware version', err);
