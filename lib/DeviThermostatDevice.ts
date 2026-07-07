@@ -27,10 +27,13 @@ const DEFAULT_SETPOINT_LIMITS = { min: 5, max: 35 };
 
 class DeviThermostatDevice extends ZigBeeDevice {
 
-  // DEVIreg InControl (devi_f) firmware clamps setpoint writes that cross
-  // below 15 °C in one step; the InControl driver overrides this to true.
+  // The firmware clamps setpoint writes that cross below 15 °C in one step.
+  // Documented on InControl (devi_f), but both models share the same firmware
+  // (03.48), so the workaround is enabled for all drivers — it is inert for
+  // setpoints of 15 °C and above. If Danfoss ever ships a fix this can be
+  // gated by the firmware_version setting.
   get lowSetpointWorkaround() {
-    return false;
+    return true;
   }
 
   // localTemperatureCalibration is only verified on DEVIreg InControl
