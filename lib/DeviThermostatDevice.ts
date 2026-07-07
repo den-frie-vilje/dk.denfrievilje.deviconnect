@@ -4,6 +4,7 @@ const { CLUSTER, Cluster } = require('zigbee-clusters');
 const DeviConnectThermostatCluster = require('./deviConnectThermostatCluster');
 const DeviTimeCluster = require('./deviTimeCluster');
 const DeviUserInterfaceCluster = require('./deviUserInterfaceCluster');
+const DeviTemperatureMeasurementCluster = require('./deviTemperatureMeasurementCluster');
 
 // Enable debug logging of all relevant Zigbee communication
 // const { debug } = require('zigbee-clusters');
@@ -12,6 +13,7 @@ const DeviUserInterfaceCluster = require('./deviUserInterfaceCluster');
 Cluster.addCluster(DeviConnectThermostatCluster);
 Cluster.addCluster(DeviTimeCluster);
 Cluster.addCluster(DeviUserInterfaceCluster);
+Cluster.addCluster(DeviTemperatureMeasurementCluster);
 
 // int16 sentinel the firmware reports when a sensor is absent or faulty
 const INVALID_TEMPERATURE = -32768;
@@ -21,7 +23,8 @@ const TIME_SYNC_INTERVAL_MS = 24 * 60 * 60 * 1000;
 // Fallback for devices that have not been re-paired yet and therefore have
 // no thermostat binding towards Homey (reports won't arrive without one)
 const POLL_INTERVAL_MS = 15 * 60 * 1000;
-const REPORTING_STORE_KEY = 'reporting_configured_v1';
+// v2: heaterOn moved to a separate manufacturer-specific configuration call
+const REPORTING_STORE_KEY = 'reporting_configured_v2';
 
 const DEFAULT_SETPOINT_LIMITS = { min: 5, max: 35 };
 
@@ -63,7 +66,8 @@ class DeviThermostatDevice extends ZigBeeDevice {
       pollInterval: POLL_INTERVAL_MS,
     };
 
-    // On these devices localTemperature is the floor sensor
+    // localTemperature is the regulation temperature: the floor sensor in
+    // floor control mode, the estimated temperature in room/combi mode
     this.registerCapability('measure_temperature', CLUSTER.THERMOSTAT, {
       report: 'localTemperature',
       reportParser: (value: any) => this.parseTemperature(value),
@@ -123,18 +127,22 @@ class DeviThermostatDevice extends ZigBeeDevice {
         this.applySetpointLimits(undefined, value).catch(this.error);
       });
 
-    // Optional external/room sensor on the temperatureMeasurement cluster,
-    // reports -32768 when no sensor is connected
+    // Per the Danfoss documentation measuredValue is the floor sensor and
+    // temperatureRoom the (optional) room sensor; -32768 = not available
     this.temperatureMeasurementCluster()
       .on('attr.measuredValue', (value: any) => {
-        this.onExternalTemperature(value).catch(this.error);
+        this.updateSensorCapability('measure_temperature.floor', value).catch(this.error);
+      })
+      .on('attr.temperatureRoom', (value: any) => {
+        this.updateSensorCapability('measure_temperature.room', value).catch(this.error);
       });
 
-    await this.syncSetpointLimits();
-    await this.detectExternalSensor();
-    await this.ensureAttributeReporting();
-    await this.syncDeviceTime();
-    await this.readFirmwareVersion();
+    // The capability shipped briefly under a wrong name/meaning; migrate
+    if (this.hasCapability('measure_temperature.external')) {
+      await this.removeCapability('measure_temperature.external');
+    }
+
+    await this.runMaintenance(false);
 
     this.homey.setInterval(() => {
       this.syncDeviceTime().catch(this.error);
@@ -146,11 +154,28 @@ class DeviThermostatDevice extends ZigBeeDevice {
   // reporting configuration and clock, so re-apply both.
   async onEndDeviceAnnounce() {
     this.log('Device announced itself, re-syncing time, reporting and limits');
-    await this.syncDeviceTime();
-    await this.ensureAttributeReporting(true);
-    await this.syncSetpointLimits();
-    // A firmware update reboots the device, so refresh the version too
-    await this.readFirmwareVersion();
+    await this.runMaintenance(true);
+  }
+
+  // Homey's repair flow fires a device announce AND a fresh onNodeInit at
+  // nearly the same moment; running two identical request sequences against
+  // a freshly-joined device makes responses time out. Single-flight: while
+  // one maintenance run is active, further calls await it instead.
+  async runMaintenance(force: boolean) {
+    if (this.maintenancePromise) return this.maintenancePromise;
+    this.maintenancePromise = (async () => {
+      try {
+        await this.syncDeviceTime();
+        await this.ensureAttributeReporting(force);
+        await this.syncSetpointLimits();
+        await this.detectSensors();
+        // A firmware update reboots the device, so refresh the version too
+        await this.readFirmwareVersion();
+      } finally {
+        this.maintenancePromise = null;
+      }
+    })();
+    return this.maintenancePromise;
   }
 
   async onSettings({ oldSettings, newSettings, changedKeys }: any) {
@@ -259,27 +284,39 @@ class DeviThermostatDevice extends ZigBeeDevice {
     return true;
   }
 
-  async detectExternalSensor() {
+  // Reads both sensors once; the capabilities are only added when the sensor
+  // actually delivers a value (manufacturer-specific attributes cannot share
+  // a read with standard ones, hence two calls)
+  async detectSensors() {
     try {
       const { measuredValue } = await this.temperatureMeasurementCluster()
         .readAttributes(['measuredValue']);
-      await this.onExternalTemperature(measuredValue);
+      await this.updateSensorCapability('measure_temperature.floor', measuredValue);
     } catch (err) {
-      this.log('External sensor not readable (optional)', err);
+      this.log('Floor sensor not readable (optional)');
+    }
+    try {
+      const { temperatureRoom } = await this.temperatureMeasurementCluster()
+        .readAttributes(['temperatureRoom']);
+      await this.updateSensorCapability('measure_temperature.room', temperatureRoom);
+    } catch (err) {
+      this.log('Room sensor not readable (optional)');
     }
   }
 
-  async onExternalTemperature(value: any) {
+  async updateSensorCapability(capabilityId: string, value: any) {
     const temperature = this.parseTemperature(value);
     if (temperature === null) return;
-    if (!this.hasCapability('measure_temperature.external')) {
-      await this.addCapability('measure_temperature.external');
-      await this.setCapabilityOptions('measure_temperature.external', {
-        title: { en: 'External sensor', da: 'Ekstern føler' },
+    if (!this.hasCapability(capabilityId)) {
+      await this.addCapability(capabilityId);
+      await this.setCapabilityOptions(capabilityId, {
+        title: capabilityId === 'measure_temperature.floor'
+          ? { en: 'Floor sensor', da: 'Gulvføler' }
+          : { en: 'Room temperature', da: 'Rumtemperatur' },
       });
-      this.log('External temperature sensor detected, capability added');
+      this.log(`Sensor detected, capability ${capabilityId} added`);
     }
-    await this.setCapabilityValue('measure_temperature.external', temperature);
+    await this.setCapabilityValue(capabilityId, temperature);
   }
 
   // Estimated power draw derived from the heating relay state and the
@@ -306,6 +343,9 @@ class DeviThermostatDevice extends ZigBeeDevice {
   async ensureAttributeReporting(force = false) {
     if (!force && this.getStoreValue(REPORTING_STORE_KEY) === true) return;
 
+    // Standard thermostat attributes in one batch. heaterOn is configured
+    // separately below: it is manufacturer-specific and a ZCL frame cannot
+    // mix manufacturer-specific and standard attributes.
     try {
       await this.configureAttributeReporting([
         {
@@ -324,14 +364,6 @@ class DeviThermostatDevice extends ZigBeeDevice {
           maxInterval: 3600,
           minChange: 10,
         },
-        {
-          endpointId: this.thermostatEndpoint,
-          cluster: CLUSTER.THERMOSTAT,
-          attributeName: 'heaterOn',
-          minInterval: 0,
-          maxInterval: 3600,
-          minChange: 1,
-        },
       ]);
       await this.setStoreValue(REPORTING_STORE_KEY, true);
       this.log('Thermostat attribute reporting configured');
@@ -340,10 +372,19 @@ class DeviThermostatDevice extends ZigBeeDevice {
       this.error('Failed to configure thermostat attribute reporting', err);
     }
 
-    // Optional clusters configured separately: failure here (e.g. no external
-    // sensor connected) must not affect the thermostat configuration above
-    try {
-      await this.configureAttributeReporting([{
+    // The remaining attributes are configured one call each and tolerate
+    // failure: heaterOn/temperatureRoom are manufacturer-specific, the floor
+    // sensor may be absent, and keypad lockout config is flaky on devi_c.
+    const optionalConfigurations = [
+      [{
+        endpointId: this.thermostatEndpoint,
+        cluster: CLUSTER.THERMOSTAT,
+        attributeName: 'heaterOn',
+        minInterval: 0,
+        maxInterval: 3600,
+        minChange: 1,
+      }],
+      [{
         endpointId: this.getClusterEndpoint(CLUSTER.TEMPERATURE_MEASUREMENT)
           ?? this.thermostatEndpoint,
         cluster: CLUSTER.TEMPERATURE_MEASUREMENT,
@@ -351,13 +392,17 @@ class DeviThermostatDevice extends ZigBeeDevice {
         minInterval: 10,
         maxInterval: 3600,
         minChange: 100, // 1 °C, matches zigbee2mqtt
-      }]);
-    } catch (err) {
-      this.log('External sensor reporting not configured (optional)');
-    }
-
-    try {
-      await this.configureAttributeReporting([{
+      }],
+      [{
+        endpointId: this.getClusterEndpoint(CLUSTER.TEMPERATURE_MEASUREMENT)
+          ?? this.thermostatEndpoint,
+        cluster: CLUSTER.TEMPERATURE_MEASUREMENT,
+        attributeName: 'temperatureRoom',
+        minInterval: 60,
+        maxInterval: 3600,
+        minChange: 10,
+      }],
+      [{
         endpointId: this.getClusterEndpoint(DeviUserInterfaceCluster)
           ?? this.thermostatEndpoint,
         cluster: DeviUserInterfaceCluster,
@@ -365,9 +410,15 @@ class DeviThermostatDevice extends ZigBeeDevice {
         minInterval: 10,
         maxInterval: 3600,
         minChange: 1,
-      }]);
-    } catch (err) {
-      this.log('Keypad lockout reporting not configured (optional)');
+      }],
+    ];
+    for (const configuration of optionalConfigurations) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await this.configureAttributeReporting(configuration);
+      } catch (err) {
+        this.log(`Reporting not configured for ${configuration[0].attributeName} (optional)`);
+      }
     }
   }
 

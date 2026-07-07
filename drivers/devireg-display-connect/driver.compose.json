@@ -27,23 +27,6 @@
       "max": 35,
       "step": 0.5
     },
-    "measure_temperature": {
-      "title": {
-        "en": "Floor temperature",
-        "nl": "Vloertemperatuur",
-        "da": "Gulvtemperatur",
-        "de": "Bodentemperatur",
-        "es": "Temperatura del suelo",
-        "fr": "Température du sol",
-        "it": "Temperatura del pavimento",
-        "no": "Gulvtemperatur",
-        "sv": "Golvtemperatur",
-        "pl": "Temperatura podłogi",
-        "ru": "Температура пола",
-        "ko": "바닥 온도",
-        "ar": "درجة حرارة الأرضية"
-      }
-    },
     "locked": {
       "title": {
         "en": "Child lock",
