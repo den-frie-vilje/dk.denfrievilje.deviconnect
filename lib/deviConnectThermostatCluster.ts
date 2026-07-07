@@ -1,7 +1,7 @@
-const { ThermostatCluster, ZCLDataTypes } = require("zigbee-clusters");
+const { ThermostatCluster, ZCLDataTypes } = require('zigbee-clusters');
 
 class DeviConnectThermostatCluster extends ThermostatCluster {
-  
+
   static get ATTRIBUTES() {
     return {
       ...super.ATTRIBUTES,

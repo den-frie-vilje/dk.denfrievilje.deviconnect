@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "dk.denfrievilje.deviconnect",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "compatibility": ">=12.2.0",
   "sdk": 3,
   "brandColor": "#2A6495",
@@ -88,7 +88,111 @@
       "capabilities": [
         "target_temperature",
         "measure_temperature",
-        "operational_state"
+        "operational_state",
+        "locked"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature": {
+          "min": 5,
+          "max": 35,
+          "step": 0.5
+        },
+        "measure_temperature": {
+          "title": {
+            "en": "Floor temperature",
+            "nl": "Vloertemperatuur",
+            "da": "Gulvtemperatur",
+            "de": "Bodentemperatur",
+            "es": "Temperatura del suelo",
+            "fr": "Température du sol",
+            "it": "Temperatura del pavimento",
+            "no": "Gulvtemperatur",
+            "sv": "Golvtemperatur",
+            "pl": "Temperatura podłogi",
+            "ru": "Температура пола",
+            "ko": "바닥 온도",
+            "ar": "درجة حرارة الأرضية"
+          }
+        },
+        "locked": {
+          "title": {
+            "en": "Child lock",
+            "nl": "Kinderslot",
+            "da": "Børnesikring",
+            "de": "Kindersicherung",
+            "es": "Bloqueo infantil",
+            "fr": "Sécurité enfant",
+            "it": "Blocco bambini",
+            "no": "Barnesikring",
+            "sv": "Barnlås",
+            "pl": "Blokada rodzicielska",
+            "ru": "Защита от детей",
+            "ko": "어린이 잠금",
+            "ar": "قفل الأطفال"
+          }
+        }
+      },
+      "settings": [
+        {
+          "id": "load_watts",
+          "type": "number",
+          "label": {
+            "en": "Heating element power",
+            "nl": "Vermogen verwarmingselement",
+            "da": "Varmeelementets effekt",
+            "de": "Leistung des Heizelements",
+            "es": "Potencia del elemento calefactor",
+            "fr": "Puissance de l'élément chauffant",
+            "it": "Potenza dell'elemento riscaldante",
+            "no": "Varmeelementets effekt",
+            "sv": "Värmeelementets effekt",
+            "pl": "Moc elementu grzejnego",
+            "ru": "Мощность нагревательного элемента",
+            "ko": "발열체 전력",
+            "ar": "قدرة عنصر التسخين"
+          },
+          "hint": {
+            "en": "Used to estimate power consumption while heating. Set to 0 to disable.",
+            "nl": "Gebruikt om het stroomverbruik tijdens verwarmen te schatten. Zet op 0 om uit te schakelen.",
+            "da": "Bruges til at estimere strømforbruget under opvarmning. Sæt til 0 for at deaktivere.",
+            "de": "Wird zur Schätzung des Stromverbrauchs beim Heizen verwendet. Zum Deaktivieren auf 0 setzen.",
+            "es": "Se usa para estimar el consumo de energía durante la calefacción. Ponlo en 0 para desactivar.",
+            "fr": "Utilisé pour estimer la consommation électrique pendant le chauffage. Mettre à 0 pour désactiver.",
+            "it": "Usato per stimare il consumo di energia durante il riscaldamento. Impostare a 0 per disattivare.",
+            "no": "Brukes til å estimere strømforbruket under oppvarming. Sett til 0 for å deaktivere.",
+            "sv": "Används för att uppskatta strömförbrukningen vid uppvärmning. Sätt till 0 för att inaktivera.",
+            "pl": "Służy do szacowania zużycia energii podczas grzania. Ustaw 0, aby wyłączyć.",
+            "ru": "Используется для оценки энергопотребления во время нагрева. Установите 0, чтобы отключить.",
+            "ko": "난방 중 전력 소비를 추정하는 데 사용됩니다. 비활성화하려면 0으로 설정하세요.",
+            "ar": "يُستخدم لتقدير استهلاك الطاقة أثناء التدفئة. اضبطه على 0 للتعطيل."
+          },
+          "value": 0,
+          "min": 0,
+          "max": 3680,
+          "units": {
+            "en": "W"
+          }
+        },
+        {
+          "id": "firmware_version",
+          "type": "label",
+          "label": {
+            "en": "Firmware version",
+            "nl": "Firmwareversie",
+            "da": "Firmwareversion",
+            "de": "Firmware-Version",
+            "es": "Versión de firmware",
+            "fr": "Version du micrologiciel",
+            "it": "Versione firmware",
+            "no": "Fastvareversjon",
+            "sv": "Firmwareversion",
+            "pl": "Wersja oprogramowania",
+            "ru": "Версия прошивки",
+            "ko": "펌웨어 버전",
+            "ar": "إصدار البرنامج الثابت"
+          },
+          "value": ""
+        }
       ],
       "platforms": [
         "local"
@@ -126,11 +230,14 @@
               3,
               10,
               513,
+              516,
               1026,
               2821
             ],
             "bindings": [
-              10
+              513,
+              516,
+              1026
             ]
           }
         },
@@ -175,7 +282,152 @@
       "capabilities": [
         "target_temperature",
         "measure_temperature",
-        "operational_state"
+        "operational_state",
+        "locked"
+      ],
+      "capabilitiesOptions": {
+        "target_temperature": {
+          "min": 5,
+          "max": 35,
+          "step": 0.5
+        },
+        "measure_temperature": {
+          "title": {
+            "en": "Floor temperature",
+            "nl": "Vloertemperatuur",
+            "da": "Gulvtemperatur",
+            "de": "Bodentemperatur",
+            "es": "Temperatura del suelo",
+            "fr": "Température du sol",
+            "it": "Temperatura del pavimento",
+            "no": "Gulvtemperatur",
+            "sv": "Golvtemperatur",
+            "pl": "Temperatura podłogi",
+            "ru": "Температура пола",
+            "ko": "바닥 온도",
+            "ar": "درجة حرارة الأرضية"
+          }
+        },
+        "locked": {
+          "title": {
+            "en": "Child lock",
+            "nl": "Kinderslot",
+            "da": "Børnesikring",
+            "de": "Kindersicherung",
+            "es": "Bloqueo infantil",
+            "fr": "Sécurité enfant",
+            "it": "Blocco bambini",
+            "no": "Barnesikring",
+            "sv": "Barnlås",
+            "pl": "Blokada rodzicielska",
+            "ru": "Защита от детей",
+            "ko": "어린이 잠금",
+            "ar": "قفل الأطفال"
+          }
+        }
+      },
+      "settings": [
+        {
+          "id": "load_watts",
+          "type": "number",
+          "label": {
+            "en": "Heating element power",
+            "nl": "Vermogen verwarmingselement",
+            "da": "Varmeelementets effekt",
+            "de": "Leistung des Heizelements",
+            "es": "Potencia del elemento calefactor",
+            "fr": "Puissance de l'élément chauffant",
+            "it": "Potenza dell'elemento riscaldante",
+            "no": "Varmeelementets effekt",
+            "sv": "Värmeelementets effekt",
+            "pl": "Moc elementu grzejnego",
+            "ru": "Мощность нагревательного элемента",
+            "ko": "발열체 전력",
+            "ar": "قدرة عنصر التسخين"
+          },
+          "hint": {
+            "en": "Used to estimate power consumption while heating. Set to 0 to disable.",
+            "nl": "Gebruikt om het stroomverbruik tijdens verwarmen te schatten. Zet op 0 om uit te schakelen.",
+            "da": "Bruges til at estimere strømforbruget under opvarmning. Sæt til 0 for at deaktivere.",
+            "de": "Wird zur Schätzung des Stromverbrauchs beim Heizen verwendet. Zum Deaktivieren auf 0 setzen.",
+            "es": "Se usa para estimar el consumo de energía durante la calefacción. Ponlo en 0 para desactivar.",
+            "fr": "Utilisé pour estimer la consommation électrique pendant le chauffage. Mettre à 0 pour désactiver.",
+            "it": "Usato per stimare il consumo di energia durante il riscaldamento. Impostare a 0 per disattivare.",
+            "no": "Brukes til å estimere strømforbruket under oppvarming. Sett til 0 for å deaktivere.",
+            "sv": "Används för att uppskatta strömförbrukningen vid uppvärmning. Sätt till 0 för att inaktivera.",
+            "pl": "Służy do szacowania zużycia energii podczas grzania. Ustaw 0, aby wyłączyć.",
+            "ru": "Используется для оценки энергопотребления во время нагрева. Установите 0, чтобы отключить.",
+            "ko": "난방 중 전력 소비를 추정하는 데 사용됩니다. 비활성화하려면 0으로 설정하세요.",
+            "ar": "يُستخدم لتقدير استهلاك الطاقة أثناء التدفئة. اضبطه على 0 للتعطيل."
+          },
+          "value": 0,
+          "min": 0,
+          "max": 3680,
+          "units": {
+            "en": "W"
+          }
+        },
+        {
+          "id": "temperature_calibration",
+          "type": "number",
+          "label": {
+            "en": "Temperature calibration",
+            "nl": "Temperatuurkalibratie",
+            "da": "Temperaturkalibrering",
+            "de": "Temperaturkalibrierung",
+            "es": "Calibración de temperatura",
+            "fr": "Étalonnage de la température",
+            "it": "Calibrazione della temperatura",
+            "no": "Temperaturkalibrering",
+            "sv": "Temperaturkalibrering",
+            "pl": "Kalibracja temperatury",
+            "ru": "Калибровка температуры",
+            "ko": "온도 보정",
+            "ar": "معايرة درجة الحرارة"
+          },
+          "hint": {
+            "en": "Offset applied to the measured temperature.",
+            "nl": "Correctie toegepast op de gemeten temperatuur.",
+            "da": "Justering af den målte temperatur.",
+            "de": "Korrektur der gemessenen Temperatur.",
+            "es": "Corrección aplicada a la temperatura medida.",
+            "fr": "Correction appliquée à la température mesurée.",
+            "it": "Correzione applicata alla temperatura misurata.",
+            "no": "Justering av den målte temperaturen.",
+            "sv": "Justering av den uppmätta temperaturen.",
+            "pl": "Korekta zastosowana do zmierzonej temperatury.",
+            "ru": "Поправка к измеренной температуре.",
+            "ko": "측정된 온도에 적용되는 보정값입니다.",
+            "ar": "تصحيح يُطبق على درجة الحرارة المقاسة."
+          },
+          "value": 0,
+          "min": -12.8,
+          "max": 12.7,
+          "step": 0.1,
+          "units": {
+            "en": "°C"
+          }
+        },
+        {
+          "id": "firmware_version",
+          "type": "label",
+          "label": {
+            "en": "Firmware version",
+            "nl": "Firmwareversie",
+            "da": "Firmwareversion",
+            "de": "Firmware-Version",
+            "es": "Versión de firmware",
+            "fr": "Version du micrologiciel",
+            "it": "Versione firmware",
+            "no": "Fastvareversjon",
+            "sv": "Firmwareversion",
+            "pl": "Wersja oprogramowania",
+            "ru": "Версия прошивки",
+            "ko": "펌웨어 버전",
+            "ar": "إصدار البرنامج الثابت"
+          },
+          "value": ""
+        }
       ],
       "platforms": [
         "local"
@@ -213,11 +465,14 @@
               3,
               10,
               513,
+              516,
               1026,
               2821
             ],
             "bindings": [
-              10
+              513,
+              516,
+              1026
             ]
           }
         },

@@ -1,3 +1,14 @@
 {
-  "extends": "athom"
+  "extends": "athom",
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts", ".json"]
+      }
+    }
+  },
+  "rules": {
+    "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }],
+    "node/no-missing-require": ["error", { "allowModules": ["homey"], "tryExtensions": [".js", ".ts", ".json"] }]
+  }
 }

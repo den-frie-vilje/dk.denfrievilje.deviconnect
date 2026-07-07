@@ -5,3 +5,5 @@ Create Flows to effortlessly trigger your heating control in exactly the way you
 Support for DEVIreg™ models :
 - DEVIreg™ Display Connect
 - DEVIreg™ InControl
+
+Upgrading from version 1.1.x or earlier? To enable instant status updates, let each thermostat rejoin the network: open the device in Homey → settings → Maintenance → "Try to repair" and follow the instructions (this keeps your Flows intact). If repair does not help, remove the device and add it again.
