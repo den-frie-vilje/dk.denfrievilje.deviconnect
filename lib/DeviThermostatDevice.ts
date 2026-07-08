@@ -235,6 +235,11 @@ class DeviThermostatDevice extends ZigBeeDevice {
 
   parseTemperature(value: any) {
     if (typeof value !== 'number' || value === INVALID_TEMPERATURE) return null;
+    // The device documents its measurable range as -20.00 to +99.90 °C.
+    // A disconnected sensor input can rail far outside it (observed:
+    // -62.50 °C on an InControl with no room sensor) instead of reporting
+    // the ZCL invalid value, so treat out-of-range as "no sensor" too.
+    if (value < -2000 || value > 9990) return null;
     return value / 100;
   }
 
@@ -306,28 +311,38 @@ class DeviThermostatDevice extends ZigBeeDevice {
   }
 
   // Reads both sensors once; the capabilities are only added when the sensor
-  // actually delivers a value (manufacturer-specific attributes cannot share
-  // a read with standard ones, hence two calls)
+  // actually delivers a value, and removed again when it does not (sensor
+  // unplugged, or bogus railed readings from an open input). Manufacturer-
+  // specific attributes cannot share a read with standard ones, hence two
+  // calls.
   async detectSensors() {
     try {
       const { measuredValue } = await this.temperatureMeasurementCluster()
         .readAttributes(['measuredValue']);
-      await this.updateSensorCapability('measure_temperature.floor', measuredValue);
+      await this.updateSensorCapability('measure_temperature.floor', measuredValue, true);
     } catch (err) {
       this.log('Floor sensor not readable (optional)');
     }
     try {
       const { temperatureRoom } = await this.temperatureMeasurementCluster()
         .readAttributes(['temperatureRoom']);
-      await this.updateSensorCapability('measure_temperature.room', temperatureRoom);
+      await this.updateSensorCapability('measure_temperature.room', temperatureRoom, true);
     } catch (err) {
       this.log('Room sensor not readable (optional)');
     }
   }
 
-  async updateSensorCapability(capabilityId: string, value: any) {
+  async updateSensorCapability(capabilityId: string, value: any, removeWhenInvalid = false) {
     const temperature = this.parseTemperature(value);
-    if (temperature === null) return;
+    if (temperature === null) {
+      // Only the deliberate detection path removes the capability; a bad
+      // value inside a report stream should not discard the tile/insights
+      if (removeWhenInvalid && this.hasCapability(capabilityId)) {
+        await this.removeCapability(capabilityId);
+        this.log(`Sensor absent or invalid, capability ${capabilityId} removed`);
+      }
+      return;
+    }
     if (!this.hasCapability(capabilityId)) {
       await this.addCapability(capabilityId);
       await this.setCapabilityOptions(capabilityId, {
