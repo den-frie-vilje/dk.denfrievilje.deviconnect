@@ -61,6 +61,7 @@
   },
   "1.0.4": {
     "en": "Learnmode animation for pairing",
+    "nl": "Leermodus-animatie voor het koppelen",
     "da": "Learnmode animation til sammenkobling",
     "de": "Learnmode-Animation für die Kopplung",
     "es": "Animación de modo de aprendizaje para emparejamiento",
@@ -90,6 +91,7 @@
   },
   "1.1.0": {
     "en": "Added support for DEVIreg InControl",
+    "nl": "Ondersteuning toegevoegd voor DEVIreg InControl",
     "da": "Tilføjet support til DEVIreg InControl",
     "de": "Unterstützung für DEVIreg InControl hinzugefügt",
     "es": "Añadido soporte para DEVIreg InControl",

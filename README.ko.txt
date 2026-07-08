@@ -3,3 +3,5 @@ DEVIreg™ Connect 게이트웨이를 건너뛰고 DEVIreg ZigBee 유닛을 Home
 지원하는 DEVIreg™ 모델:
 - DEVIreg™ Display Connect
 - DEVIreg™ InControl
+
+1.1.x 이하 버전에서 업그레이드하시나요? 즉시 상태 업데이트를 사용하려면 각 온도 조절기를 네트워크에 다시 연결해야 합니다. Homey에서 장치를 열고 → 설정 → 유지 관리 → "복구 시도"를 선택한 후 안내를 따르세요(Flow는 그대로 유지됩니다). 복구로 해결되지 않으면 장치를 제거한 후 다시 추가하세요.

@@ -28,6 +28,39 @@ const REPORTING_STORE_KEY = 'reporting_configured_v2';
 
 const DEFAULT_SETPOINT_LIMITS = { min: 5, max: 35 };
 
+const SENSOR_CAPABILITY_TITLES: any = {
+  'measure_temperature.floor': {
+    en: 'Floor sensor',
+    nl: 'Vloersensor',
+    da: 'Gulvføler',
+    de: 'Bodensensor',
+    es: 'Sensor de suelo',
+    fr: 'Sonde de sol',
+    it: 'Sensore a pavimento',
+    no: 'Gulvføler',
+    sv: 'Golvgivare',
+    pl: 'Czujnik podłogowy',
+    ru: 'Датчик пола',
+    ko: '바닥 센서',
+    ar: 'مستشعر الأرضية',
+  },
+  'measure_temperature.room': {
+    en: 'Room temperature',
+    nl: 'Kamertemperatuur',
+    da: 'Rumtemperatur',
+    de: 'Raumtemperatur',
+    es: 'Temperatura ambiente',
+    fr: 'Température ambiante',
+    it: 'Temperatura ambiente',
+    no: 'Romtemperatur',
+    sv: 'Rumstemperatur',
+    pl: 'Temperatura pokojowa',
+    ru: 'Комнатная температура',
+    ko: '실내 온도',
+    ar: 'درجة حرارة الغرفة',
+  },
+};
+
 class DeviThermostatDevice extends ZigBeeDevice {
 
   // Firmware before 03.49 clamps setpoint writes that cross below 15 °C in
@@ -298,9 +331,7 @@ class DeviThermostatDevice extends ZigBeeDevice {
     if (!this.hasCapability(capabilityId)) {
       await this.addCapability(capabilityId);
       await this.setCapabilityOptions(capabilityId, {
-        title: capabilityId === 'measure_temperature.floor'
-          ? { en: 'Floor sensor', da: 'Gulvføler' }
-          : { en: 'Room temperature', da: 'Rumtemperatur' },
+        title: SENSOR_CAPABILITY_TITLES[capabilityId],
       });
       this.log(`Sensor detected, capability ${capabilityId} added`);
     }
