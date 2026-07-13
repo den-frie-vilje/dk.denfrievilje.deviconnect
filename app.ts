@@ -30,19 +30,19 @@ class DeviConnectApp extends Homey.App {
 
     await this.homey.notifications.createNotification({
       excerpt: this.homey.__({
-        en: "DEVIreg™ ZigBee: to enable instant status updates, open each thermostat → settings → Maintenance → 'Try to repair' (your Flows are kept). If repair does not help, remove and re-add the device.",
-        nl: "DEVIreg™ ZigBee: voor directe statusupdates open je elke thermostaat → instellingen → Onderhoud → 'Probeer te repareren' (je Flows blijven behouden). Helpt repareren niet, verwijder het apparaat dan en voeg het opnieuw toe.",
-        da: "DEVIreg™ ZigBee: for øjeblikkelige statusopdateringer skal du åbne hver termostat → indstillinger → Vedligeholdelse → 'Forsøg at reparere' (dine Flows bevares). Hjælper reparation ikke, skal du fjerne enheden og tilføje den igen.",
-        de: "DEVIreg™ ZigBee: Für sofortige Statusaktualisierungen öffne jedes Thermostat → Einstellungen → Wartung → 'Reparieren versuchen' (deine Flows bleiben erhalten). Hilft das nicht, entferne das Gerät und füge es erneut hinzu.",
-        es: "DEVIreg™ ZigBee: para actualizaciones de estado instantáneas, abre cada termostato → ajustes → Mantenimiento → 'Intentar reparar' (tus Flows se conservan). Si no ayuda, elimina el dispositivo y añádelo de nuevo.",
-        fr: "DEVIreg™ ZigBee : pour des mises à jour d'état instantanées, ouvrez chaque thermostat → paramètres → Maintenance → 'Essayer de réparer' (vos Flows sont conservés). Si cela ne fonctionne pas, supprimez l'appareil et ajoutez-le à nouveau.",
-        it: "DEVIreg™ ZigBee: per aggiornamenti di stato istantanei, apri ogni termostato → impostazioni → Manutenzione → 'Prova a riparare' (i tuoi Flow vengono conservati). Se non aiuta, rimuovi il dispositivo e aggiungilo di nuovo.",
-        no: "DEVIreg™ ZigBee: for umiddelbare statusoppdateringer, åpne hver termostat → innstillinger → Vedlikehold → 'Prøv å reparere' (dine Flows beholdes). Hjelper det ikke, fjern enheten og legg den til på nytt.",
-        sv: "DEVIreg™ ZigBee: för omedelbara statusuppdateringar, öppna varje termostat → inställningar → Underhåll → 'Försök reparera' (dina Flows behålls). Om det inte hjälper, ta bort enheten och lägg till den igen.",
-        pl: "DEVIreg™ ZigBee: aby włączyć natychmiastowe aktualizacje stanu, otwórz każdy termostat → ustawienia → Konserwacja → 'Spróbuj naprawić' (Twoje Flow zostaną zachowane). Jeśli to nie pomoże, usuń urządzenie i dodaj je ponownie.",
-        ru: "DEVIreg™ ZigBee: для мгновенных обновлений состояния откройте каждый термостат → настройки → Обслуживание → 'Попробовать восстановить' (ваши Flows сохранятся). Если это не поможет, удалите устройство и добавьте его снова.",
-        ko: "DEVIreg™ ZigBee: 즉시 상태 업데이트를 사용하려면 각 온도 조절기 → 설정 → 유지 관리 → '복구 시도'를 선택하세요(Flow는 유지됩니다). 해결되지 않으면 장치를 제거한 후 다시 추가하세요.",
-        ar: "DEVIreg™ ZigBee: لتفعيل تحديثات الحالة الفورية، افتح كل منظم حرارة ← الإعدادات ← الصيانة ← 'محاولة الإصلاح' (تبقى الـ Flows كما هي). إذا لم يُجدِ الإصلاح، فاحذف الجهاز وأضفه مرة أخرى.",
+        en: "DEVIreg™: for instant updates, open each thermostat → Maintenance → 'Try to repair' (Flows are kept).",
+        nl: "DEVIreg™: voor directe updates, open elke thermostaat → Onderhoud → 'Probeer te repareren' (Flows blijven behouden).",
+        da: "DEVIreg™: for øjeblikkelige opdateringer, åbn hver termostat → Vedligeholdelse → 'Forsøg at reparere' (Flows bevares).",
+        de: "DEVIreg™: Für sofortige Updates öffne jedes Thermostat → Wartung → 'Reparieren versuchen' (Flows bleiben erhalten).",
+        es: "DEVIreg™: para actualizaciones instantáneas, abre cada termostato → Mantenimiento → 'Intentar reparar' (los Flows se conservan).",
+        fr: "DEVIreg™ : pour des mises à jour instantanées, ouvrez chaque thermostat → Maintenance → 'Essayer de réparer' (les Flows sont conservés).",
+        it: "DEVIreg™: per aggiornamenti istantanei, apri ogni termostato → Manutenzione → 'Prova a riparare' (i Flow vengono conservati).",
+        no: "DEVIreg™: for umiddelbare oppdateringer, åpne hver termostat → Vedlikehold → 'Prøv å reparere' (Flows beholdes).",
+        sv: "DEVIreg™: för omedelbara uppdateringar, öppna varje termostat → Underhåll → 'Försök reparera' (Flows behålls).",
+        pl: "DEVIreg™: aby uzyskać natychmiastowe aktualizacje, otwórz każdy termostat → Konserwacja → 'Spróbuj naprawić' (Flow zostaną zachowane).",
+        ru: "DEVIreg™: для мгновенных обновлений откройте каждый термостат → Обслуживание → 'Попробовать восстановить' (Flows сохранятся).",
+        ko: "DEVIreg™: 즉시 업데이트를 사용하려면 각 온도 조절기 → 유지 관리 → '복구 시도'를 선택하세요(Flow는 유지됩니다).",
+        ar: "DEVIreg™: للتحديثات الفورية، افتح كل منظم حرارة ← الصيانة ← 'محاولة الإصلاح' (تبقى الـ Flows كما هي).",
       }),
     });
     this.homey.settings.set(REPAIR_NOTIFICATION_FLAG, true);
