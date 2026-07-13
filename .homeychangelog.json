@@ -89,7 +89,7 @@
     "ko": "DEVIreg InControl 지원 추가",
     "ar": "تمت إضافة دعم لـ DEVIreg InControl"
   },
-  "1.2.1": {
+  "1.2.2": {
     "en": "Reliability improvements: instant updates when adjusting the thermostat, automatic clock sync and better error handling. New: child lock, external sensor, setpoint limits from the device, optional power estimation. Please use 'Try to repair' (device settings → Maintenance) or re-pair your thermostats to enable instant updates.",
     "da": "Forbedret pålidelighed: øjeblikkelige opdateringer ved justering på termostaten, automatisk ursynkronisering og bedre fejlhåndtering. Nyt: børnesikring, ekstern føler, temperaturgrænser fra enheden, valgfri effektestimering. Brug 'Forsøg at reparere' (enhedsindstillinger → Vedligeholdelse) eller par dine termostater igen for at aktivere øjeblikkelige opdateringer.",
     "nl": "Betrouwbaarheidsverbeteringen: directe updates bij aanpassing op de thermostaat, automatische kloksynchronisatie en betere foutafhandeling. Nieuw: kinderslot, externe sensor, temperatuurlimieten van het apparaat, optionele vermogensschatting. Gebruik 'Probeer te repareren' (apparaatinstellingen → Onderhoud) of koppel je thermostaten opnieuw om directe updates in te schakelen.",
