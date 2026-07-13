@@ -103,5 +103,8 @@
     "ru": "Добавлена поддержка DEVIreg InControl",
     "ko": "DEVIreg InControl 지원 추가",
     "ar": "تمت إضافة دعم لـ DEVIreg InControl"
+  },
+  "1.2.1": {
+    "en": "Added notification that devices need repairing"
   }
 }
