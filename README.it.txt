@@ -3,5 +3,3 @@ Salta il gateway DEVIreg™ Connect e collega direttamente le tue unità DEVIreg
 Supporto per i modelli DEVIreg™:
 - DEVIreg™ Display Connect
 - DEVIreg™ InControl
-
-Stai aggiornando dalla versione 1.1.x o precedente? Per attivare gli aggiornamenti di stato istantanei, ogni termostato deve ricollegarsi alla rete: apri il dispositivo in Homey → impostazioni → Manutenzione → "Prova a riparare" e segui le istruzioni (i tuoi Flow vengono conservati). Se la riparazione non aiuta, rimuovi il dispositivo e aggiungilo di nuovo.

@@ -5,5 +5,3 @@ Opret Flows for ubesværet at aktivere din varmekontrol præcis på den måde, d
 Understøttede DEVIreg™ modeller:
 - DEVIreg™ Display Connect
 - DEVIreg™ InControl
-
-Opgraderer du fra version 1.1.x eller ældre? For at aktivere øjeblikkelige statusopdateringer skal hver termostat tilsluttes netværket igen: Åbn enheden i Homey → indstillinger → Vedligeholdelse → "Forsøg at reparere" og følg vejledningen (dine Flows bevares). Hvis reparation ikke hjælper, skal du fjerne enheden og tilføje den igen.

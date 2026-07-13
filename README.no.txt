@@ -3,5 +3,3 @@ Hopp over DEVIreg™ Connect-gatewayen og koble dine DEVIreg ZigBee-enheter dire
 Støtte for DEVIreg™-modeller:
 - DEVIreg™ Display Connect
 - DEVIreg™ InControl
-
-Oppgraderer du fra versjon 1.1.x eller eldre? For å aktivere umiddelbare statusoppdateringer må hver termostat koble seg til nettverket på nytt: Åpne enheten i Homey → innstillinger → Vedlikehold → "Prøv å reparere" og følg instruksjonene (dine Flows beholdes). Hvis reparasjon ikke hjelper, fjern enheten og legg den til på nytt.

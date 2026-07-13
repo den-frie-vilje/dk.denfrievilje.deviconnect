@@ -5,5 +5,3 @@ Twórz Flows, aby bez wysiłku uruchamiać kontrolę ogrzewania dokładnie w tak
 Obsługiwane modele DEVIreg™:
 - DEVIreg™ Display Connect
 - DEVIreg™ InControl
-
-Aktualizujesz z wersji 1.1.x lub starszej? Aby włączyć natychmiastowe aktualizacje stanu, każdy termostat musi ponownie dołączyć do sieci: otwórz urządzenie w Homey → ustawienia → Konserwacja → „Spróbuj naprawić” i postępuj zgodnie z instrukcjami (Twoje Flow zostaną zachowane). Jeśli naprawa nie pomoże, usuń urządzenie i dodaj je ponownie.
