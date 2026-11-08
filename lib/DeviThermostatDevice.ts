@@ -63,16 +63,13 @@ const SENSOR_CAPABILITY_TITLES: any = {
 
 class DeviThermostatDevice extends ZigBeeDevice {
 
-  // Firmware before 03.49 clamps setpoint writes that cross below 15 °C in
-  // one step; fixed in 03.49 and later (confirmed by Danfoss). Apply the
-  // workaround on older firmware, and when the version is unknown to be safe.
+  // The firmware clamps setpoint writes that cross below 15 °C in one step:
+  // observed on 03.48, reported fixed in 03.49 by Danfoss, regressed in
+  // 03.50 (device accepts the write, then snaps back to 15.00). Version
+  // gating proved unreliable, so the two-step write is always used; it only
+  // costs one extra write and a 3 s pause, and only for targets below 15 °C.
   needsLowSetpointWorkaround() {
-    const version = String(this.getSetting('firmware_version') || '');
-    const match = version.match(/^(\d+)\.(\d+)/);
-    if (!match) return true;
-    const major = parseInt(match[1], 10);
-    const minor = parseInt(match[2], 10);
-    return major < 3 || (major === 3 && minor < 49);
+    return true;
   }
 
   // localTemperatureCalibration is only verified on DEVIreg InControl
@@ -269,18 +266,24 @@ class DeviThermostatDevice extends ZigBeeDevice {
   }
 
   // Reads the configured setpoint limits from the device and applies them to
-  // the target_temperature capability, falling back to the absolute limits
+  // the target_temperature capability, falling back to the absolute limits.
+  // Also reads the DEVI-repurposed control mode and floor limits purely for
+  // diagnostics (0x0013 = control mode 0/1/2 = floor/room/combi; the "cool"
+  // limits are the floor limits on these devices).
   async syncSetpointLimits() {
     try {
-      const {
-        minHeatSetpointLimit, maxHeatSetpointLimit,
-      } = await this.thermostatCluster().readAttributes(['minHeatSetpointLimit', 'maxHeatSetpointLimit']);
+      const attributes = await this.thermostatCluster().readAttributes([
+        'minHeatSetpointLimit', 'maxHeatSetpointLimit',
+        'absMinHeatSetpointLimit', 'absMaxHeatSetpointLimit',
+        'minCoolSetpointLimit', 'maxCoolSetpointLimit',
+        'unoccupiedCoolingSetpoint',
+      ]);
+      this.log('Limit attributes:', JSON.stringify(attributes));
+      const { minHeatSetpointLimit, maxHeatSetpointLimit } = attributes;
       if (await this.applySetpointLimits(minHeatSetpointLimit, maxHeatSetpointLimit)) return;
-
-      const {
-        absMinHeatSetpointLimit, absMaxHeatSetpointLimit,
-      } = await this.thermostatCluster().readAttributes(['absMinHeatSetpointLimit', 'absMaxHeatSetpointLimit']);
-      await this.applySetpointLimits(absMinHeatSetpointLimit, absMaxHeatSetpointLimit);
+      await this.applySetpointLimits(
+        attributes.absMinHeatSetpointLimit, attributes.absMaxHeatSetpointLimit,
+      );
     } catch (err) {
       this.error('Failed to read setpoint limits, keeping current values', err);
     }
