@@ -66,6 +66,8 @@ class DeviThermostatDevice extends ZigBeeDevice {
   // Firmware before 03.49 clamps setpoint writes that cross below 15 °C in
   // one step; fixed in 03.49 and later (confirmed by Danfoss). Apply the
   // workaround on older firmware, and when the version is unknown to be safe.
+  // Verified on hardware 2026-11-08: the two-step write works on 03.48 and
+  // 03.49 alike, and no unit has shown the clamp on 03.49 or later.
   needsLowSetpointWorkaround() {
     const version = String(this.getSetting('firmware_version') || '');
     const match = version.match(/^(\d+)\.(\d+)/);
@@ -73,11 +75,6 @@ class DeviThermostatDevice extends ZigBeeDevice {
     const major = parseInt(match[1], 10);
     const minor = parseInt(match[2], 10);
     return major < 3 || (major === 3 && minor < 49);
-  }
-
-  // localTemperatureCalibration is only verified on DEVIreg InControl
-  get supportsCalibration() {
-    return false;
   }
 
   async onNodeInit({ zclNode }: any) {
@@ -109,11 +106,20 @@ class DeviThermostatDevice extends ZigBeeDevice {
       getOpts,
     });
 
+    // The set path runs through setParser: it performs the (possibly two-step)
+    // write itself with status checking and returns null, which the library
+    // documents as "the command will not be executed" (ZigBeeDevice.js:223,
+    // SetParserFunction). A thrown error reaches the Homey UI as a failed set.
     this.registerCapability('target_temperature', CLUSTER.THERMOSTAT, {
       report: 'occupiedHeatingSetpoint',
       reportParser: (value: any) => this.parseTemperature(value),
       get: 'occupiedHeatingSetpoint',
       getParser: (value: any) => this.parseTemperature(value),
+      set: 'writeAttributes',
+      setParser: async (value: number) => {
+        await this.writeSetpoint(value);
+        return null;
+      },
       getOpts,
     });
 
@@ -135,13 +141,6 @@ class DeviThermostatDevice extends ZigBeeDevice {
         keypadLockout: value ? 'levelOneLockout' : 'noLockout',
       }),
       getOpts,
-    });
-
-    // Custom listener (replaces the one registerCapability installs, hence
-    // the harmless "already registered" warning): the sub-15 °C workaround
-    // needs a two-step write with a delay, which set/setParser cannot express.
-    this.registerCapabilityListener('target_temperature', async (value: any) => {
-      return this.writeSetpoint(value);
     });
 
     // Live updates when the setpoint limits are changed on the device itself
@@ -209,12 +208,27 @@ class DeviThermostatDevice extends ZigBeeDevice {
       const heaterOn = this.getCapabilityValue('operational_state') === 'running';
       await this.updatePowerEstimate(heaterOn, newSettings.load_watts);
     }
-    if (changedKeys.includes('temperature_calibration') && this.supportsCalibration) {
-      // localTemperatureCalibration is an int8 in units of 0.1 °C
-      await this.thermostatCluster().writeAttributes({
-        localTemperatureCalibration: Math.round(newSettings.temperature_calibration * 10),
-      });
+  }
+
+  // zigbee-clusters resolves writeAttributes with the raw Write Attributes
+  // Response and never inspects it (zigbee-clusters README § v2.0.0;
+  // lib/Cluster.js writeAttributes), so a write the device refuses looks like
+  // a success. Observed 2026-11-08: writing systemMode "off" resolved with
+  // { attributes: [{ status: 'INVALID_VALUE', id: 28 }] } and changed nothing.
+  // Throw on any non-SUCCESS record so callers and the Homey UI see the
+  // failure. An all-success response carries one SUCCESS record without an
+  // attribute id (ZCL § 2.5.4.3), which parses as id 0 here.
+  async writeAttributesChecked(cluster: any, attributes: Record<string, unknown>) {
+    const response = await cluster.writeAttributes(attributes);
+    const records: Array<{ status?: string; id?: number }> = response?.attributes ?? [];
+    const refused = records.filter((record) => record.status !== 'SUCCESS');
+    if (refused.length > 0) {
+      const detail = refused
+        .map((record) => `attribute ${record.id} ${record.status}`)
+        .join(', ');
+      throw new Error(`Device refused write to ${cluster.name}: ${detail}`);
     }
+    return response;
   }
 
   thermostatCluster() {
@@ -257,10 +271,14 @@ class DeviThermostatDevice extends ZigBeeDevice {
         // Firmware clamps the setpoint at 15 °C when crossing below it in a
         // single write; write 15 °C first, let the display settle, then write
         // the real value (same workaround as zigbee2mqtt uses)
-        await this.thermostatCluster().writeAttributes({ occupiedHeatingSetpoint: 1500 });
+        await this.writeAttributesChecked(this.thermostatCluster(), {
+          occupiedHeatingSetpoint: 1500,
+        });
         await new Promise((resolve) => this.homey.setTimeout(resolve, 3000));
       }
-      await this.thermostatCluster().writeAttributes({ occupiedHeatingSetpoint: setpoint });
+      await this.writeAttributesChecked(this.thermostatCluster(), {
+        occupiedHeatingSetpoint: setpoint,
+      });
     } catch (err) {
       this.error('Failed to write occupiedHeatingSetpoint', err);
       // Rethrow so the Homey UI shows the failure and reverts the value
@@ -269,18 +287,20 @@ class DeviThermostatDevice extends ZigBeeDevice {
   }
 
   // Reads the configured setpoint limits from the device and applies them to
-  // the target_temperature capability, falling back to the absolute limits
+  // the target_temperature capability, falling back to the absolute limits.
+  // One frame for all four: a non-SUCCESS record is dropped from the result
+  // rather than failing the read (zigbee-clusters lib/Cluster.js readAttributes).
   async syncSetpointLimits() {
     try {
-      const {
-        minHeatSetpointLimit, maxHeatSetpointLimit,
-      } = await this.thermostatCluster().readAttributes(['minHeatSetpointLimit', 'maxHeatSetpointLimit']);
+      const attributes = await this.thermostatCluster().readAttributes([
+        'minHeatSetpointLimit', 'maxHeatSetpointLimit',
+        'absMinHeatSetpointLimit', 'absMaxHeatSetpointLimit',
+      ]);
+      const { minHeatSetpointLimit, maxHeatSetpointLimit } = attributes;
       if (await this.applySetpointLimits(minHeatSetpointLimit, maxHeatSetpointLimit)) return;
-
-      const {
-        absMinHeatSetpointLimit, absMaxHeatSetpointLimit,
-      } = await this.thermostatCluster().readAttributes(['absMinHeatSetpointLimit', 'absMaxHeatSetpointLimit']);
-      await this.applySetpointLimits(absMinHeatSetpointLimit, absMaxHeatSetpointLimit);
+      await this.applySetpointLimits(
+        attributes.absMinHeatSetpointLimit, attributes.absMaxHeatSetpointLimit,
+      );
     } catch (err) {
       this.error('Failed to read setpoint limits, keeping current values', err);
     }
@@ -319,6 +339,7 @@ class DeviThermostatDevice extends ZigBeeDevice {
     try {
       const { measuredValue } = await this.temperatureMeasurementCluster()
         .readAttributes(['measuredValue']);
+      this.log('Floor sensor raw measuredValue:', measuredValue);
       await this.updateSensorCapability('measure_temperature.floor', measuredValue, true);
     } catch (err) {
       this.log('Floor sensor not readable (optional)');
@@ -326,6 +347,7 @@ class DeviThermostatDevice extends ZigBeeDevice {
     try {
       const { temperatureRoom } = await this.temperatureMeasurementCluster()
         .readAttributes(['temperatureRoom']);
+      this.log('Room sensor raw temperatureRoom:', temperatureRoom);
       await this.updateSensorCapability('measure_temperature.room', temperatureRoom, true);
     } catch (err) {
       this.log('Room sensor not readable (optional)');
@@ -354,7 +376,10 @@ class DeviThermostatDevice extends ZigBeeDevice {
   }
 
   // Estimated power draw derived from the heating relay state and the
-  // heating element wattage configured by the user (0 disables the feature)
+  // heating element wattage configured by the user (0 disables the feature
+  // and removes the capability again, as the setting's hint says). A
+  // calculated wattage is marked as an approximation so the UI shows it as
+  // such (Apps SDK, Energy § Approximating power usage, "approximated: true").
   async updatePowerEstimate(heaterOn: boolean, loadWattsOverride?: number) {
     const loadWatts = typeof loadWattsOverride === 'number'
       ? loadWattsOverride
@@ -363,10 +388,26 @@ class DeviThermostatDevice extends ZigBeeDevice {
       if (!this.hasCapability('measure_power')) {
         await this.addCapability('measure_power');
       }
+      await this.ensureApproximatedPowerOption();
       await this.setCapabilityValue('measure_power', heaterOn ? loadWatts : 0);
     } else if (this.hasCapability('measure_power')) {
       await this.removeCapability('measure_power');
     }
+  }
+
+  // Sets the marker once per device, also for devices that gained
+  // measure_power before this option existed; setCapabilityOptions is
+  // described as expensive, so only when it is missing.
+  async ensureApproximatedPowerOption() {
+    let options: any = {};
+    try {
+      options = this.getCapabilityOptions('measure_power') || {};
+    } catch (err) {
+      // No options set yet
+    }
+    if (options.approximated === true) return;
+    await this.setCapabilityOptions('measure_power', { ...options, approximated: true });
+    this.log('measure_power marked as approximated');
   }
 
   // Configures ZCL attribute reporting. Reports only arrive when the device
@@ -461,7 +502,7 @@ class DeviThermostatDevice extends ZigBeeDevice {
   // Writes ZCL UTCTime (seconds since 2000-01-01 UTC).
   async syncDeviceTime() {
     try {
-      await this.timeCluster().writeAttributes({
+      await this.writeAttributesChecked(this.timeCluster(), {
         time: this.zigbeeTimestamp(),
         timeStatus: ['synchronized'],
       });
