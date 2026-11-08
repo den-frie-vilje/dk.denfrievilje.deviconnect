@@ -63,13 +63,17 @@ const SENSOR_CAPABILITY_TITLES: any = {
 
 class DeviThermostatDevice extends ZigBeeDevice {
 
-  // The firmware clamps setpoint writes that cross below 15 °C in one step:
-  // observed on 03.48, reported fixed in 03.49 by Danfoss, regressed in
-  // 03.50 (device accepts the write, then snaps back to 15.00). Version
-  // gating proved unreliable, so the two-step write is always used; it only
-  // costs one extra write and a 3 s pause, and only for targets below 15 °C.
+  // Firmware before 03.49 clamps setpoint writes that cross below 15 °C in
+  // one step; fixed in 03.49 (confirmed by Danfoss and verified on hardware:
+  // new units still ship with 03.48 as of 2026-11, so the gate stays).
+  // Apply the workaround on older firmware, and when the version is unknown.
   needsLowSetpointWorkaround() {
-    return true;
+    const version = String(this.getSetting('firmware_version') || '');
+    const match = version.match(/^(\d+)\.(\d+)/);
+    if (!match) return true;
+    const major = parseInt(match[1], 10);
+    const minor = parseInt(match[2], 10);
+    return major < 3 || (major === 3 && minor < 49);
   }
 
   // localTemperatureCalibration is only verified on DEVIreg InControl
@@ -254,15 +258,38 @@ class DeviThermostatDevice extends ZigBeeDevice {
         // Firmware clamps the setpoint at 15 °C when crossing below it in a
         // single write; write 15 °C first, let the display settle, then write
         // the real value (same workaround as zigbee2mqtt uses)
+        this.log(`writeSetpoint: two-step for ${setpoint}, step 1: 1500`);
         await this.thermostatCluster().writeAttributes({ occupiedHeatingSetpoint: 1500 });
         await new Promise((resolve) => this.homey.setTimeout(resolve, 3000));
       }
-      await this.thermostatCluster().writeAttributes({ occupiedHeatingSetpoint: setpoint });
+      await this.writeSetpointVerified(setpoint);
     } catch (err) {
       this.error('Failed to write occupiedHeatingSetpoint', err);
       // Rethrow so the Homey UI shows the failure and reverts the value
       throw err;
     }
+  }
+
+  // Writes the setpoint and reads it back, retrying once. A freshly joined
+  // node on a degraded mesh can drop this write; inside the two-step
+  // workaround that strands the device at step one's 15.00 with nothing in
+  // the log (observed in the field, 2026-11-08). Logging and verification
+  // make that failure visible and usually self-healing.
+  async writeSetpointVerified(setpoint: number) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        this.log(`writeSetpoint: writing ${setpoint} (attempt ${attempt})`);
+        await this.thermostatCluster().writeAttributes({ occupiedHeatingSetpoint: setpoint });
+        const { occupiedHeatingSetpoint } = await this.thermostatCluster()
+          .readAttributes(['occupiedHeatingSetpoint']);
+        this.log(`writeSetpoint: read-back ${occupiedHeatingSetpoint} (attempt ${attempt})`);
+        if (occupiedHeatingSetpoint === setpoint) return;
+      } catch (err) {
+        if (attempt === 2) throw err;
+        this.error('writeSetpoint: attempt failed, retrying', err);
+      }
+    }
+    throw new Error('setpoint_not_accepted_by_device');
   }
 
   // Reads the configured setpoint limits from the device and applies them to
